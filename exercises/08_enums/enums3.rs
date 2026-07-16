@@ -1,3 +1,4 @@
+#[derive(Debug)]
 struct Point {
     x: u64,
     y: u64,
@@ -11,6 +12,7 @@ enum Message {
     Quit,
 }
 
+#[derive(Debug)]
 struct State {
     width: u64,
     height: u64,
@@ -46,6 +48,17 @@ impl State {
     fn process(&mut self, message: Message) {
         // TODO: Create a match expression to process the different message
         // variants using the methods defined above.
+        match message {
+            Message::Resize { width, height } => {
+                self.resize(width, height);
+            }
+            Message::Move(point) => self.move_position(point),
+            Message::Echo(string) => self.echo(string),
+            Message::ChangeColor(red, blue, green) => {
+                self.change_color(red, blue, green);
+            }
+            Message::Quit => self.quit(),
+        }
     }
 }
 
@@ -76,6 +89,7 @@ mod tests {
         state.process(Message::Echo(String::from("Hello world!")));
         state.process(Message::ChangeColor(255, 0, 255));
         state.process(Message::Quit);
+        dbg!(&state);
 
         assert_eq!(state.width, 10);
         assert_eq!(state.height, 30);
